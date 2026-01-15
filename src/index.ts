@@ -109,7 +109,21 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
   }
 });
 
-app.delete("/api/v1/content", (req, res) => {});
+app.get("/api/v1/content", userMiddleware, async (req, res) => {
+  const userId = req.body;
+  try {
+    const content = await ContentModle.find({ userId });
+    res.json({
+      content,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error,
+    });
+  }
+});
+
+app.delete("/api/v1/content", userMiddleware, async (req, res) => {});
 
 app.post("/api/v1/brain/share", (req, res) => {});
 app.get("/api/v1/brain/:shareLink", (req, res) => {});

@@ -2,9 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { connectDB, UserModle } from "./db.js";
+import { connectDB, ContentModle, UserModle } from "./db.js";
 
 import dotenv from "dotenv";
+import { userMiddleware } from "./middlemare.js";
 dotenv.config();
 
 const app = express();
@@ -92,7 +93,22 @@ app.post("/api/v1/signin", async (req, res) => {
   });
 });
 
-app.get("/api/v1/content", (req, res) => {});
+app.post("/api/v1/content", userMiddleware, async (req, res) => {
+  const { title, url, userId } = req.body;
+
+  try {
+    await ContentModle.create({
+      title,
+      url,
+      userId,
+    });
+
+    res.json({ message: "Content Created Successfully" });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+
 app.delete("/api/v1/content", (req, res) => {});
 
 app.post("/api/v1/brain/share", (req, res) => {});

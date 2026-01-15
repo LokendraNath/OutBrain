@@ -22,7 +22,7 @@ export const UserModle = model("User", UserSchema);
 // Contend Modle
 const ContentSchema = new Schema({
   title: String,
-  url: String,
+  link: String,
   tags: [{ type: mongoose.Types.ObjectId, ref: "Tag" }],
   userId: { type: mongoose.Types.ObjectId, ref: "User", require: true },
 });

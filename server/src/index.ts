@@ -94,13 +94,16 @@ app.post("/api/v1/signin", async (req, res) => {
 });
 
 app.post("/api/v1/content", userMiddleware, async (req, res) => {
-  const { title, url, userId } = req.body;
+  const { title, link } = req.body;
+  console.log(req.body);
 
   try {
     await ContentModle.create({
       title,
-      url,
-      userId,
+      link,
+      // @ts-ignore
+      userId: req.userId,
+      tags: [],
     });
 
     res.json({ message: "Content Created Successfully" });
@@ -112,7 +115,7 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
 app.get("/api/v1/content", userMiddleware, async (req, res) => {
   const userId = req.body;
   try {
-    const content = await ContentModle.find({ userId });
+    const content = await ContentModle.find({ userId }).populate("userId");
     res.json({
       content,
     });

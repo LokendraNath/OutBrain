@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { connectDB, UserModle } from "./db.js";
 
 import dotenv from "dotenv";
@@ -11,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
-const JWT_PASS = "!3kjduk34j";
+const JWT_PASSWORD = process.env.JWT_PASSWORD!;
 
 app.post("/api/v1/signup", async (req, res) => {
   try {
@@ -25,11 +26,12 @@ app.post("/api/v1/signup", async (req, res) => {
       return res.status(403).json({ error: "User Already In the Database" });
     }
 
-    // ToDo: Hash Password
+    // Hash Password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     await UserModle.create({
       username,
-      password,
+      password: hashedPassword,
     });
 
     res.json({
@@ -42,7 +44,53 @@ app.post("/api/v1/signup", async (req, res) => {
   }
 });
 
-app.post("/app/v1/signin", (req, res) => {});
+app.post("/api/v1/signin", async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({
+      message: "Email And Password are required",
+    });
+  }
+
+  // Check User Already Exist?
+  const existingUser = await UserModle.findOne({ username });
+  if (!existingUser) {
+    return res.status(411).json({
+      message: "User Is Not Availble",
+    });
+  }
+
+  if (!existingUser.password) {
+    return res.status(400).json({
+      message: "Password Missing",
+    });
+  }
+
+  // Hash Password Check
+  const comparePassword = async (
+    plainPassword: string,
+    hashedPassword: string
+  ) => {
+    return await bcrypt.compare(plainPassword, hashedPassword);
+  };
+
+  const isMatch = await comparePassword(password, existingUser.password);
+  if (!isMatch) {
+    return res.status(411).json({
+      message: "Incorrect Password",
+    });
+  }
+
+  // Token Create
+  const token = jwt.sign({ id: existingUser._id }, JWT_PASSWORD, {
+    expiresIn: "7d",
+  });
+
+  res.json({
+    token,
+  });
+});
 
 app.get("/api/v1/content", (req, res) => {});
 app.delete("/api/v1/content", (req, res) => {});

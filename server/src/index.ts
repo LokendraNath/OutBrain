@@ -46,51 +46,48 @@ app.post("/api/v1/signup", async (req, res) => {
 });
 
 app.post("/api/v1/signin", async (req, res) => {
-  const { username, password } = req.body;
+  try {
+    const { username, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({
-      message: "Email And Password are required",
+    if (!username || !password) {
+      return res.status(400).json({
+        message: "Email And Password are required",
+      });
+    }
+
+    // Check User Already Exist?
+    const existingUser = await UserModel.findOne({ username });
+    if (!existingUser) {
+      return res.status(411).json({
+        message: "User Is Not Availble",
+      });
+    }
+
+    if (!existingUser.password) {
+      return res.status(400).json({
+        message: "Password Missing",
+      });
+    }
+
+    // Hash Password Check
+    const isMatch = await bcrypt.compare(password, existingUser.password);
+    if (!isMatch) {
+      return res.status(411).json({
+        message: "Incorrect Password",
+      });
+    }
+
+    // Token Create
+    const token = jwt.sign({ id: existingUser._id }, JWT_PASSWORD, {
+      expiresIn: "7d",
     });
-  }
 
-  // Check User Already Exist?
-  const existingUser = await UserModel.findOne({ username });
-  if (!existingUser) {
-    return res.status(411).json({
-      message: "User Is Not Availble",
+    res.json({
+      token,
     });
+  } catch (error) {
+    return res.status(500).json({ error });
   }
-
-  if (!existingUser.password) {
-    return res.status(400).json({
-      message: "Password Missing",
-    });
-  }
-
-  // Hash Password Check
-  const comparePassword = async (
-    plainPassword: string,
-    hashedPassword: string
-  ) => {
-    return await bcrypt.compare(plainPassword, hashedPassword);
-  };
-
-  const isMatch = await comparePassword(password, existingUser.password);
-  if (!isMatch) {
-    return res.status(411).json({
-      message: "Incorrect Password",
-    });
-  }
-
-  // Token Create
-  const token = jwt.sign({ id: existingUser._id }, JWT_PASSWORD, {
-    expiresIn: "7d",
-  });
-
-  res.json({
-    token,
-  });
 });
 
 app.post("/api/v1/content", userMiddleware, async (req, res) => {

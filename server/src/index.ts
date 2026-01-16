@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { connectDB, ContentModel, UserModel } from "./db.js";
+import { v4 as uuidv4 } from "uuid";
 
 import dotenv from "dotenv";
 import { userMiddleware } from "./middleware.js";
@@ -152,8 +153,95 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
   }
 });
 
-app.post("/api/v1/brain/share", (req, res) => {});
-app.get("/api/v1/brain/:shareLink", (req, res) => {});
+app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
+  const { share } = req.body;
+  //@ts-ignore
+  const userId = req.userId;
+
+  try {
+    // ? Disable
+    if (share === false) {
+      //@ts-ignore
+      const updatedUser = await UserModel.findByIdAndUpdate(user._id, {
+        $set: {
+          share: false,
+          shareLink: "",
+        },
+      });
+
+      if (!updatedUser) {
+        return res.status(404).json({ message: "user Not found" });
+      }
+      return res.status(200).json({
+        message: "OutLink Brain is Now Private",
+      });
+    }
+
+    // ? Enable
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User No Found" });
+    }
+
+    //? If Already Shared Link
+    // @ts-ignore
+    if (user.share && user.shareLink) {
+      return res.status(200).json({
+        link: `http://localhost:5000/api/v1/brain/${user.shareLink}`,
+      });
+    }
+
+    //? Create hash
+    const hash = uuidv4();
+
+    await UserModel.findByIdAndUpdate(user._id, {
+      $set: {
+        share: true,
+        shareLink: `https://localhost:5000/api/v1/brain/${hash}`,
+      },
+    });
+
+    return res.json({
+      // @ts-ignore
+      link: `http://localhost:5000/api/v1/brain/${hash}`,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Server Error", error });
+  }
+});
+
+app.get("/api/v1/brain/:shareLink", async (req, res) => {
+  const { shareLink } = req.params;
+
+  try {
+    const user = await UserModel.findOne({ shareLink });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Invalid Request",
+      });
+    }
+
+    // ? This OutBrain Is Private
+    //@ts-ignore
+    if (!user.share) {
+      return res.status(403).json({
+        message: "This is Private OutBrain",
+      });
+    }
+
+    // ? Find The Contents
+    //@ts-ignore
+    const contents = await ContentModel.find({ userId: user._id });
+    console.log(contents);
+    res.json({
+      contents,
+    });
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
 
 connectDB().then(() => {
   app.listen(PORT, () => {

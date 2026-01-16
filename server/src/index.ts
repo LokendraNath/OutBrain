@@ -165,7 +165,7 @@ app.post("/api/v1/brain/share", authMiddleware, async (req, res) => {
       const updatedUser = await UserModel.findByIdAndUpdate(user._id, {
         $set: {
           share: false,
-          shareLink: "",
+          link: "",
         },
       });
 
@@ -186,9 +186,9 @@ app.post("/api/v1/brain/share", authMiddleware, async (req, res) => {
 
     //? If Already Shared Link
     // @ts-ignore
-    if (user.share && user.shareLink) {
+    if (user.share && user.link) {
       return res.status(200).json({
-        link: `http://localhost:5000/api/v1/brain/${user.shareLink}`,
+        link: `http://localhost:5000/api/v1/brain/${user.link}`,
       });
     }
 
@@ -198,7 +198,7 @@ app.post("/api/v1/brain/share", authMiddleware, async (req, res) => {
     await UserModel.findByIdAndUpdate(user._id, {
       $set: {
         share: true,
-        shareLink: `https://localhost:5000/api/v1/brain/${hash}`,
+        link: `https://localhost:5000/api/v1/brain/${hash}`,
       },
     });
 
@@ -215,7 +215,7 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
   const { shareLink } = req.params;
 
   try {
-    const user = await UserModel.findOne({ shareLink });
+    const user = await UserModel.findOne({ link: shareLink });
 
     if (!user) {
       return res.status(404).json({
@@ -234,7 +234,6 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
     // ? Find The Contents
     //@ts-ignore
     const contents = await ContentModel.find({ userId: user._id });
-    console.log(contents);
     res.json({
       contents,
     });

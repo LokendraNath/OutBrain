@@ -128,16 +128,28 @@ app.get("/api/v1/content", userMiddleware, async (req, res) => {
 
 app.delete("/api/v1/content", userMiddleware, async (req, res) => {
   const contentId = req.body.contentId;
+  //@ts-ignore
+  const userId = req.userId;
 
-  await ContentModel.findOneAndDelete({
-    _id: contentId,
-    //@ts-ignore
-    userId: req.userId,
-  });
+  try {
+    const response = await ContentModel.findOneAndDelete({
+      _id: contentId,
+      //@ts-ignore
+      userId,
+    });
 
-  res.json({
-    message: "Content Deleted",
-  });
+    if (!response) {
+      return res.status(404).json({
+        message: "Content Not found Or You'r Not have Permission",
+      });
+    }
+
+    res.json({
+      message: "Content Deleted Successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Invalid Id Formate", error });
+  }
 });
 
 app.post("/api/v1/brain/share", (req, res) => {});

@@ -6,7 +6,7 @@ import { connectDB, ContentModel, UserModel } from "./db.js";
 import { v4 as uuidv4 } from "uuid";
 
 import dotenv from "dotenv";
-import { userMiddleware } from "./middleware.js";
+import { authMiddleware } from "./middleware.js";
 dotenv.config();
 
 const app = express();
@@ -91,7 +91,7 @@ app.post("/api/v1/signin", async (req, res) => {
   }
 });
 
-app.post("/api/v1/content", userMiddleware, async (req, res) => {
+app.post("/api/v1/content", authMiddleware, async (req, res) => {
   const { title, link } = req.body;
 
   try {
@@ -109,7 +109,7 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
   }
 });
 
-app.get("/api/v1/content", userMiddleware, async (req, res) => {
+app.get("/api/v1/content", authMiddleware, async (req, res) => {
   //@ts-ignore
   const userId = req.userId;
   try {
@@ -127,7 +127,7 @@ app.get("/api/v1/content", userMiddleware, async (req, res) => {
   }
 });
 
-app.delete("/api/v1/content", userMiddleware, async (req, res) => {
+app.delete("/api/v1/content", authMiddleware, async (req, res) => {
   const contentId = req.body.contentId;
   //@ts-ignore
   const userId = req.userId;
@@ -153,7 +153,7 @@ app.delete("/api/v1/content", userMiddleware, async (req, res) => {
   }
 });
 
-app.post("/api/v1/brain/share", userMiddleware, async (req, res) => {
+app.post("/api/v1/brain/share", authMiddleware, async (req, res) => {
   const { share } = req.body;
   //@ts-ignore
   const userId = req.userId;

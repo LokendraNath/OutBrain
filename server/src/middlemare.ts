@@ -6,16 +6,18 @@ export const userMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers["authorization"];
-  const decode = jwt.verify(token as string, process.env.JWT_PASSWORD!);
-
-  if (decode) {
+  try {
+    const token = req.headers["authorization"];
+    if (!token) {
+      return res.status(401).json({ message: "Token Missing" });
+    }
+    const decoded = jwt.verify(token as string, process.env.JWT_PASSWORD!);
     // @ts-ignore
-    req.userId = decode.id;
+    req.userId = decoded.id;
     next();
-  } else {
+  } catch (error) {
     res.status(403).json({
-      message: "You are not Logged In",
+      message: "Invalid Token",
     });
   }
 };

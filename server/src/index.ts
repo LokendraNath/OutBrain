@@ -95,7 +95,6 @@ app.post("/api/v1/signin", async (req, res) => {
 
 app.post("/api/v1/content", userMiddleware, async (req, res) => {
   const { title, link } = req.body;
-  console.log(req.body);
 
   try {
     await ContentModle.create({
@@ -113,9 +112,10 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
 });
 
 app.get("/api/v1/content", userMiddleware, async (req, res) => {
-  const userId = req.body;
+  //@ts-ignore
+  const userId = req.userId;
   try {
-    const content = await ContentModle.find({ userId }).populate("userId");
+    const content = await ContentModle.find({ userId });
     res.json({
       content,
     });

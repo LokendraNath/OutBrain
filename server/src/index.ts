@@ -115,7 +115,10 @@ app.get("/api/v1/content", userMiddleware, async (req, res) => {
   //@ts-ignore
   const userId = req.userId;
   try {
-    const content = await ContentModle.find({ userId });
+    const content = await ContentModle.find({ userId }).populate(
+      "userId",
+      "username"
+    );
     res.json({
       content,
     });

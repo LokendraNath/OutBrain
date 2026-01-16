@@ -2,10 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { connectDB, ContentModle, UserModle } from "./db.js";
+import { connectDB, ContentModel, UserModel } from "./db.js";
 
 import dotenv from "dotenv";
-import { userMiddleware } from "./middlemare.js";
+import { userMiddleware } from "./middleware.js";
 dotenv.config();
 
 const app = express();
@@ -22,7 +22,7 @@ app.post("/api/v1/signup", async (req, res) => {
     const { username, password } = req.body;
 
     // If Already have username
-    const user = await UserModle.findOne({ username });
+    const user = await UserModel.findOne({ username });
     if (user) {
       return res.status(403).json({ error: "User Already In the Database" });
     }
@@ -30,7 +30,7 @@ app.post("/api/v1/signup", async (req, res) => {
     // Hash Password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await UserModle.create({
+    await UserModel.create({
       username,
       password: hashedPassword,
     });
@@ -55,7 +55,7 @@ app.post("/api/v1/signin", async (req, res) => {
   }
 
   // Check User Already Exist?
-  const existingUser = await UserModle.findOne({ username });
+  const existingUser = await UserModel.findOne({ username });
   if (!existingUser) {
     return res.status(411).json({
       message: "User Is Not Availble",
@@ -97,7 +97,7 @@ app.post("/api/v1/content", userMiddleware, async (req, res) => {
   const { title, link } = req.body;
 
   try {
-    await ContentModle.create({
+    await ContentModel.create({
       title,
       link,
       // @ts-ignore
@@ -115,7 +115,7 @@ app.get("/api/v1/content", userMiddleware, async (req, res) => {
   //@ts-ignore
   const userId = req.userId;
   try {
-    const content = await ContentModle.find({ userId }).populate(
+    const content = await ContentModel.find({ userId }).populate(
       "userId",
       "username"
     );
@@ -129,7 +129,19 @@ app.get("/api/v1/content", userMiddleware, async (req, res) => {
   }
 });
 
-app.delete("/api/v1/content", userMiddleware, async (req, res) => {});
+app.delete("/api/v1/content", userMiddleware, async (req, res) => {
+  const contentId = req.body.contentId;
+
+  await ContentModel.findOneAndDelete({
+    _id: contentId,
+    //@ts-ignore
+    userId: req.userId,
+  });
+
+  res.json({
+    message: "Content Deleted",
+  });
+});
 
 app.post("/api/v1/brain/share", (req, res) => {});
 app.get("/api/v1/brain/:shareLink", (req, res) => {});

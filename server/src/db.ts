@@ -17,7 +17,7 @@ const UserSchema = new Schema({
   password: String,
 });
 
-export const UserModle = model("User", UserSchema);
+export const UserModel = model("User", UserSchema);
 
 // Contend Modle
 const ContentSchema = new Schema({
@@ -27,4 +27,4 @@ const ContentSchema = new Schema({
   userId: { type: mongoose.Types.ObjectId, ref: "User", required: true },
 });
 
-export const ContentModle = model("Content", ContentSchema);
+export const ContentModel = model("Content", ContentSchema);

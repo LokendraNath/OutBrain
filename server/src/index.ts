@@ -93,13 +93,14 @@ app.post("/api/v1/signin", async (req, res) => {
 
 app.post("/api/v1/content", authMiddleware, async (req, res) => {
   const { title, link } = req.body;
+  // @ts-ignore
+  const userId = req.userId;
 
   try {
     await ContentModel.create({
       title,
       link,
-      // @ts-ignore
-      userId: req.userId,
+      userId,
       tags: [],
     });
 
@@ -127,8 +128,8 @@ app.get("/api/v1/content", authMiddleware, async (req, res) => {
   }
 });
 
-app.delete("/api/v1/content", authMiddleware, async (req, res) => {
-  const contentId = req.body.contentId;
+app.delete("/api/v1/content/:contentId", authMiddleware, async (req, res) => {
+  const { contentId } = req.params;
   //@ts-ignore
   const userId = req.userId;
 
@@ -154,72 +155,68 @@ app.delete("/api/v1/content", authMiddleware, async (req, res) => {
 });
 
 app.post("/api/v1/brain/share", authMiddleware, async (req, res) => {
-  const { share } = req.body;
+  const share = req.body.share;
   //@ts-ignore
   const userId = req.userId;
 
   try {
-    // ? Disable
-    if (share === false) {
+    if (share) {
       //@ts-ignore
-      const updatedUser = await UserModel.findByIdAndUpdate(user._id, {
+      const user = await UserModel.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User No Found" });
+      }
+
+      //? If Already Shared Link
+      // @ts-ignore
+      if (user.share && user.hash) {
+        return res.json({
+          link: `http://localhost:5000/api/v1/brain/${user.hash}`,
+        });
+      }
+
+      //? Create hash
+      const hash = uuidv4();
+
+      await UserModel.findByIdAndUpdate(userId, {
         $set: {
-          share: false,
-          link: "",
+          share: true,
+          hash,
         },
       });
 
-      if (!updatedUser) {
-        return res.status(404).json({ message: "user Not found" });
-      }
-      return res.status(200).json({
+      return res.json({
+        // @ts-ignore
+        link: `http://localhost:5000/api/v1/brain/${hash}`,
+      });
+    } else {
+      //? Disable
+      await UserModel.findByIdAndUpdate(userId, {
+        $set: {
+          share: false,
+          hash: "",
+        },
+      });
+
+      return res.json({
         message: "OutLink Brain is Now Private",
       });
     }
-
-    // ? Enable
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User No Found" });
-    }
-
-    //? If Already Shared Link
-    // @ts-ignore
-    if (user.share && user.link) {
-      return res.status(200).json({
-        link: `http://localhost:5000/api/v1/brain/${user.link}`,
-      });
-    }
-
-    //? Create hash
-    const hash = uuidv4();
-
-    await UserModel.findByIdAndUpdate(user._id, {
-      $set: {
-        share: true,
-        link: `https://localhost:5000/api/v1/brain/${hash}`,
-      },
-    });
-
-    return res.json({
-      // @ts-ignore
-      link: `http://localhost:5000/api/v1/brain/${hash}`,
-    });
   } catch (error) {
-    return res.status(500).json({ message: "Server Error", error });
+    return res.status(500).json({ error });
   }
 });
 
 app.get("/api/v1/brain/:shareLink", async (req, res) => {
-  const { shareLink } = req.params;
+  const hash = req.params.shareLink;
 
   try {
-    const user = await UserModel.findOne({ link: shareLink });
+    const user = await UserModel.findOne({ hash });
 
     if (!user) {
       return res.status(404).json({
-        message: "Invalid Request",
+        message: "Link is Invalid or User Not Availble",
       });
     }
 

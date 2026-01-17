@@ -16,7 +16,7 @@ const UserSchema = new Schema({
   username: { type: String, unique: true },
   password: String,
   share: Boolean,
-  link: { type: String, unique: true },
+  hash: { type: String, unique: true },
 });
 
 export const UserModel = model("User", UserSchema);

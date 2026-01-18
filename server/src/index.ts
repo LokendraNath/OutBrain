@@ -116,7 +116,7 @@ app.get("/api/v1/content", authMiddleware, async (req, res) => {
   try {
     const content = await ContentModel.find({ userId }).populate(
       "userId",
-      "username"
+      "username",
     );
     res.json({
       content,
@@ -216,7 +216,7 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        message: "Link is Invalid or User Not Availble",
+        message: "Link is Invalid",
       });
     }
 
@@ -232,6 +232,7 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
     //@ts-ignore
     const contents = await ContentModel.find({ userId: user._id });
     res.json({
+      username: user?.username,
       contents,
     });
   } catch (error) {

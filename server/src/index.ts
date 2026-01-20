@@ -168,15 +168,13 @@ app.post("/api/v1/brain/share", authMiddleware, async (req, res) => {
         return res.status(404).json({ message: "User No Found" });
       }
 
-      //? If Already Shared Link
       // @ts-ignore
+      //? If Already Shared Link
       if (user.share && user.hash) {
         return res.json({
           link: `http://localhost:5000/api/v1/brain/${user.hash}`,
         });
       }
-
-      //? Create hash
       const hash = uuidv4();
 
       await UserModel.findByIdAndUpdate(userId, {

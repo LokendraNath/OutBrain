@@ -1,10 +1,10 @@
 import { NotebookPen } from "lucide-react";
 import Card from "../UI/Card";
 
-const Main = () => {
+const Dashboard = () => {
   return (
-    <div className="ml-50 px-3">
-      <div className="mb-5 flex space-x-4">
+    <div className="px-3 mt-10">
+      <div className="mb-7 flex space-x-4 pt-1">
         <h1 className="text-2xl">AllNotes</h1> <NotebookPen size={30} />
       </div>
       <div className="grid grid-cols-3 gap-5">
@@ -47,4 +47,4 @@ const Main = () => {
     </div>
   );
 };
-export default Main;
+export default Dashboard;

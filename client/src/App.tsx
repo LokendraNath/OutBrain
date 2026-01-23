@@ -1,7 +1,15 @@
+import Header from "./components/Layout/Header";
+import Main from "./components/Layout/Main";
+
 const App = () => {
   return (
-    <div>
-      <h1 className="text-2xl text-green-500">Hellow</h1>
+    <div className="bg-blue-100">
+      {/* Header */}
+      <div className="mb-10">
+        <Header />
+      </div>
+      {/* Main */}
+      <Main />
     </div>
   );
 };

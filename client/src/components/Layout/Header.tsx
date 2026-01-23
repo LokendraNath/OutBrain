@@ -9,7 +9,7 @@ const Header = () => {
         <h1 className="text-3xl">OutBrain</h1>
       </div>
       {/* Seach Box */}
-      <div className="py-2 pl-4 w-72 bg-blue-100 outline-none rounded-full flex items-center">
+      <div className="py-2 pl-4 w-72 bg-white shadow-md outline-none rounded-full flex items-center">
         <Search size={20} className="text-gray-700" />
         <input
           type="text"

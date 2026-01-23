@@ -3,11 +3,11 @@ import Card from "../UI/Card";
 
 const Dashboard = () => {
   return (
-    <div>
-      <div className="mb- flex space-x-4 pt-1">
+    <>
+      <div className="mb-5 flex space-x-4 pt-1 pl-6">
         <h1 className="text-2xl">AllNotes</h1> <NotebookPen size={30} />
       </div>
-      <div className="grid grid-cols-3 gap-5">
+      <div className="grid grid-cols-3 gap-5 px-5">
         <Card
           type="tweet"
           title="Node js creater Talk About the AI Taking the jobs"
@@ -44,7 +44,7 @@ const Dashboard = () => {
           link="hkkejrkj"
         />
       </div>
-    </div>
+    </>
   );
 };
 export default Dashboard;

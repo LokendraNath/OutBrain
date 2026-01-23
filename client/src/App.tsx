@@ -11,11 +11,11 @@ const App = () => {
         <Header />
       </div>
       <div className=" flex h-screen overflow-hidden gap-5">
-        <aside className="w-54 bg-blue-600 text-white shrink-0 overflow-y-auto rounded-tr-[50px] pt-10 px-5">
+        <aside className="w-54 h-full bg-blue-600 text-white shrink-0 rounded-tr-[50px] pt-10 px-5">
           <Sidebar />
         </aside>
         {/* Main */}
-        <main>
+        <main className="flex-1 h-full overflow-y-auto px-3 mt-10">
           <Dashboard />
         </main>
       </div>

@@ -3,8 +3,8 @@ import Card from "../UI/Card";
 
 const Dashboard = () => {
   return (
-    <div className="px-3 mt-10">
-      <div className="mb-7 flex space-x-4 pt-1">
+    <div>
+      <div className="mb- flex space-x-4 pt-1">
         <h1 className="text-2xl">AllNotes</h1> <NotebookPen size={30} />
       </div>
       <div className="grid grid-cols-3 gap-5">

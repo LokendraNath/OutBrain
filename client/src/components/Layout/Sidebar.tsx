@@ -11,7 +11,7 @@ const Sidebar = () => {
         varient="secondary"
       />
       {/* Routes */}
-      <div className="mt-10 flex items-center flex-col space-y-3">
+      <div className="mt-10 flex flex-col space-y-3 px-5">
         {/* Tweet */}
         <div className="flex gap-2 items-center px-5 py-2 rounded-full hover:bg-blue-100 hover:text-blue-600 transition duration-300">
           <Twitter size={20} />{" "}

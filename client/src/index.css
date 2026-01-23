@@ -13,3 +13,8 @@
   --color-blue-900: #041943;
   --color-blue-950: #020f2e;
 }
+@layer {
+  .iconStyle {
+    @apply cursor-pointer transition duration-300;
+  }
+}

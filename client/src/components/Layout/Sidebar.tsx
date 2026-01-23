@@ -1,7 +1,18 @@
-import { File, Link, Plus, TagIcon, Twitter, Youtube } from "lucide-react";
+import {
+  File,
+  Link,
+  Plus,
+  TagIcon,
+  Twitter,
+  XCircleIcon,
+  Youtube,
+} from "lucide-react";
 import { Button } from "../UI/Button";
+import { useState } from "react";
+import CreateContentModal from "../UI/CreateContentModal";
 
 const Sidebar = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div className="flex items-center flex-col">
       {/* Add Content Button */}
@@ -9,7 +20,14 @@ const Sidebar = () => {
         startIcon={<Plus size={25} />}
         text="Add Content"
         varient="secondary"
+        onClick={() => setIsModalOpen(true)}
       />
+      {/* Modal */}
+      <CreateContentModal
+        isModalOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+
       {/* Routes */}
       <div className="mt-10 flex flex-col space-y-3 px-5">
         {/* Tweet */}

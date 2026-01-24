@@ -9,7 +9,7 @@ const App = () => {
       <div className="fixed mb-5 w-full">
         <Header />
       </div>
-      <div className="flex h-screen overflow-hidden gap-3 pt-20">
+      <div className="flex h-screen overflow-hidden gap-3 pt-10">
         <aside className="fixed top-20 h-full bg-blue-600 text-white shrink-0 rounded-tr-[50px] pt-10 px-5">
           <Sidebar />
         </aside>

@@ -4,9 +4,9 @@ import Card from "../UI/Card";
 const Dashboard = () => {
   return (
     <>
-      <div className="ml-5 flex gap-3 mb-3">
+      {/* <div className="ml-10 flex gap-3 mb-3">
         <h1 className="text-2xl">AllNotes</h1> <NotebookPen size={30} />
-      </div>
+      </div> */}
       <div className="h-full overflow-y-auto p-3">
         <div className="grid grid-cols-3 gap-5 px-5">
           <Card

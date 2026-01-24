@@ -1,8 +1,9 @@
 import { Bell, PencilRuler, Search, Share2, UserCircle2 } from "lucide-react";
+import { Button } from "../UI/Button";
 
 const Header = () => {
   return (
-    <div className="flex items-center justify-between px-10 py-3">
+    <div className="flex items-center justify-between px-10 py-5">
       {/* Logo */}
       <div className="flex items-center gap-2">
         <PencilRuler size={40} />
@@ -18,10 +19,13 @@ const Header = () => {
         />
       </div>
       {/* Icons */}
-      <div className="flex gap-10">
-        <Bell size={25} className="hover:text-yellow-700 iconStyle" />
-        <UserCircle2 size={25} className=" hover:text-blue-600 iconStyle" />
-        <Share2 size={25} className="hover:text-green-600 iconStyle" />
+      <div className="flex gap-5 items-center">
+        <Bell size={23} className="hover:text-yellow-700 iconStyle" />
+        <Button
+          text="Share Brain"
+          startIcon={<Share2 size={20} />}
+          varient="primary"
+        />
       </div>
     </div>
   );

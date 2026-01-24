@@ -1,12 +1,19 @@
-import { NotebookPen } from "lucide-react";
+import { Grid, Grid2X2, NotebookPen, Rows3Icon } from "lucide-react";
 import Card from "../UI/Card";
 
 const Dashboard = () => {
   return (
     <>
-      {/* <div className="ml-10 flex gap-3 mb-3">
-        <h1 className="text-2xl">AllNotes</h1> <NotebookPen size={30} />
-      </div> */}
+      <div className="flex gap-3 mb-3 items-center justify-between px-10">
+        <div className="flex gap-3">
+          <h1 className="text-2xl">AllNotes</h1> <NotebookPen size={30} />
+        </div>
+        <div className="flex gap-3">
+          <Grid size={23} className="cursor-pointer " />
+          <Grid2X2 size={23} className="cursor-pointer" />
+          <Rows3Icon size={23} className="cursor-pointer" />
+        </div>
+      </div>
       <div className="h-full overflow-y-auto p-3">
         <div className="grid grid-cols-3 gap-5 px-5">
           <Card

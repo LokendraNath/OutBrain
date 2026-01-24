@@ -5,6 +5,7 @@ interface ButtonProps {
   text: string;
   startIcon: ReactElement;
   onClick?: () => void;
+  className?: string;
 }
 
 const varientClasses = {
@@ -15,10 +16,16 @@ const varientClasses = {
 const defaultStyle =
   "px-4 py-2 rounded-full flex gap-2 items-center cursor-pointer";
 
-export const Button = ({ varient, text, startIcon, onClick }: ButtonProps) => {
+export const Button = ({
+  varient,
+  text,
+  startIcon,
+  onClick,
+  className,
+}: ButtonProps) => {
   return (
     <button
-      className={varientClasses[varient] + " " + defaultStyle}
+      className={`${varientClasses[varient]} ${defaultStyle} ${className}`}
       onClick={onClick}
     >
       {startIcon} <h1 className="font-semibold">{text}</h1>

@@ -17,4 +17,7 @@
   .iconStyle {
     @apply cursor-pointer transition duration-300;
   }
+  .inputBoxStyle {
+    @apply py-2 pl-5 outline-none border rounded-xl w-full mb-2 border-gray-500;
+  }
 }

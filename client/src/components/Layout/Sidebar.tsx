@@ -1,12 +1,4 @@
-import {
-  File,
-  Link,
-  Plus,
-  TagIcon,
-  Twitter,
-  XCircleIcon,
-  Youtube,
-} from "lucide-react";
+import { File, Link, Plus, TagIcon, Twitter, Youtube } from "lucide-react";
 import { Button } from "../UI/Button";
 import { useState } from "react";
 import CreateContentModal from "../UI/CreateContentModal";
@@ -22,7 +14,8 @@ const Sidebar = () => {
         varient="secondary"
         onClick={() => setIsModalOpen(true)}
       />
-      {/* Modal */}
+
+      {/* Create Content Modal */}
       <CreateContentModal
         isModalOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

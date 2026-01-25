@@ -20,10 +20,10 @@ app.post("/api/v1/signup", async (req, res) => {
   try {
     // TODO: zod validation
 
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
 
     // If Already have username
-    const user = await UserModel.findOne({ username });
+    const user = await UserModel.findOne({ email });
     if (user) {
       return res.status(403).json({ error: "User Already In the Database" });
     }
@@ -33,6 +33,7 @@ app.post("/api/v1/signup", async (req, res) => {
 
     await UserModel.create({
       username,
+      email,
       password: hashedPassword,
     });
 
@@ -48,16 +49,16 @@ app.post("/api/v1/signup", async (req, res) => {
 
 app.post("/api/v1/signin", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !password) {
+    if (!email || !password) {
       return res.status(400).json({
         message: "Email And Password are required",
       });
     }
 
     // Check User Already Exist?
-    const existingUser = await UserModel.findOne({ username });
+    const existingUser = await UserModel.findOne({ email });
     if (!existingUser) {
       return res.status(411).json({
         message: "User Is Not Availble",

@@ -14,6 +14,7 @@ export const connectDB = async () => {
 // User Modle
 const UserSchema = new Schema({
   username: { type: String, unique: true },
+  email: String,
   password: String,
   share: Boolean,
   hash: { type: String, unique: true },

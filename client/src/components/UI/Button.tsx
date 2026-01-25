@@ -3,9 +3,10 @@ import type { ReactElement } from "react";
 interface ButtonProps {
   varient: "primary" | "secondary";
   text: string;
-  startIcon: ReactElement;
   onClick?: () => void;
   className?: string;
+  startIcon?: ReactElement;
+  endIcon?: ReactElement;
 }
 
 const varientClasses = {
@@ -22,13 +23,14 @@ export const Button = ({
   startIcon,
   onClick,
   className,
+  endIcon,
 }: ButtonProps) => {
   return (
     <button
-      className={`${varientClasses[varient]} ${defaultStyle} ${className}`}
+      className={`${varientClasses[varient]} ${defaultStyle} ${className} flex items-center justify-center`}
       onClick={onClick}
     >
-      {startIcon} <h1 className="font-semibold">{text}</h1>
+      {startIcon} <h1 className="font-semibold">{text}</h1> {endIcon}
     </button>
   );
 };

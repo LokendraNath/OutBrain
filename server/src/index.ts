@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
@@ -10,7 +11,8 @@ import { authMiddleware } from "./middleware.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+app.use(cors());
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -20,9 +22,9 @@ app.post("/api/v1/signup", async (req, res) => {
   try {
     // TODO: zod validation
 
-    const { username, email, password } = req.body;
+    const { fullName, email, password } = req.body;
 
-    // If Already have username
+    // If Already have Account
     const user = await UserModel.findOne({ email });
     if (user) {
       return res.status(403).json({ error: "User Already In the Database" });
@@ -32,7 +34,7 @@ app.post("/api/v1/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await UserModel.create({
-      username,
+      fullName,
       email,
       password: hashedPassword,
     });
@@ -231,7 +233,7 @@ app.get("/api/v1/brain/:shareLink", async (req, res) => {
     //@ts-ignore
     const contents = await ContentModel.find({ userId: user._id });
     res.json({
-      username: user?.username,
+      fullName: user?.fullName,
       contents,
     });
   } catch (error) {

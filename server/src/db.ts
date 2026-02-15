@@ -13,7 +13,6 @@ export const connectDB = async () => {
 
 // User Modle
 const UserSchema = new Schema({
-  fullName: String,
   email: { type: String, unique: true },
   password: String,
   share: Boolean,

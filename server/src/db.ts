@@ -11,7 +11,6 @@ export const connectDB = async () => {
   }
 };
 
-// User Modle
 const UserSchema = new Schema({
   email: { type: String, unique: true },
   password: String,
@@ -21,7 +20,6 @@ const UserSchema = new Schema({
 
 export const UserModel = model("User", UserSchema);
 
-// Contend Modle
 const ContentSchema = new Schema({
   title: String,
   link: String,

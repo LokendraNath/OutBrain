@@ -1,11 +1,6 @@
-# dependencies
 node_modules/
-
-# production build
 dist/
 build/
-
-# environment variables
 .env
 .env.local
 .env.development
